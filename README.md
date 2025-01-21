@@ -35,6 +35,7 @@ Questo è solo il middleware dell'applicazione. Per il funzionamento completo so
 ### Backend
 - Java 17
 - Javalin (Framework web leggero)
+- Hibernate (ORM)
 - Jackson (Serializzazione JSON)
 - MySQL (Database)
 - SLF4J (Logging)
@@ -43,6 +44,7 @@ Questo è solo il middleware dell'applicazione. Per il funzionamento completo so
 ### Dipendenze
 - `com.fasterxml.jackson.core:jackson-databind`
 - `io.javalin:javalin`
+- `org.hibernate:hibernate-core`
 - `mysql:mysql-connector-java`
 - `org.slf4j:slf4j-simple`
 
@@ -81,19 +83,23 @@ CREATE TABLE articles (
 ```
 
 ### 3. Configurazione Ambiente
-Crea il file `.env` nella root del progetto:
-```env
-# Database
-DB_URL=jdbc:mysql://localhost:3306/openwiki
-DB_USER=your_username
-DB_PASSWORD=your_password
+Crea il file `application.properties` nella cartella `src/main/resources`:
+```properties
+# Hibernate
+hibernate.dialect=org.hibernate.dialect.MySQLDialect
+hibernate.connection.driver_class=com.mysql.cj.jdbc.Driver
+hibernate.connection.url=jdbc:mysql://localhost:3306/openwiki
+hibernate.connection.username=your_username
+hibernate.connection.password=your_password
+hibernate.show_sql=true
+hibernate.hbm2ddl.auto=update
 
 # Server
-SERVER_PORT=8080
-CORS_ALLOWED_ORIGINS=http://localhost:5174
+server.port=8080
+cors.allowed.origins=http://localhost:5174
 
 # Wikipedia API
-WIKI_API_URL=https://it.wikipedia.org/w/api.php
+wiki.api.url=https://it.wikipedia.org/w/api.php
 ```
 
 ### 4. Build e Avvio
@@ -143,33 +149,36 @@ Content-Type: application/json
 ```
 src/
 ├── main/
-│   └── java/
-│       └── com/
-│           └── openwiki/
-│               ├── controller/    # Controller API
-│               │   ├── AuthController.java
-│               │   └── WikiController.java
-│               ├── service/       # Logica di business
-│               │   └── WikiService.java
-│               ├── model/         # Modelli dati
-│               │   ├── Article.java
-│               │   └── WikiSearchResult.java
-│               ├── dao/          # Data Access Objects
-│               │   └── ArticleDAO.java
-│               ├── config/       # Configurazioni
-│               │   └── DatabaseConfig.java
-│               └── middleware/   # Middleware
-│                   └── AuthMiddleware.java
+│   ├── java/
+│   │   └── com/
+│   │       └── openwiki/
+│   │           ├── controller/    # Controller API
+│   │           │   ├── AuthController.java
+│   │           │   └── WikiController.java
+│   │           ├── service/       # Logica di business
+│   │           │   └── WikiService.java
+│   │           ├── model/         # Modelli dati (Entità Hibernate)
+│   │           │   ├── Article.java
+│   │           │   └── WikiSearchResult.java
+│   │           ├── repository/    # Repository Hibernate
+│   │           │   └── ArticleRepository.java
+│   │           ├── config/       # Configurazioni
+│   │           │   └── HibernateConfig.java
+│   │           └── middleware/   # Middleware
+│   │               └── AuthMiddleware.java
+│   └── resources/
+│       └── application.properties
 ```
 
 ## 📝 Note Importanti
 
 - Il middleware richiede Java 17 o superiore
+- Hibernate gestisce automaticamente la creazione delle tabelle del database
 - È necessario avere MySQL installato e configurato
 - Assicurarsi che tutti i componenti dell'applicazione siano in esecuzione
 - Il servizio si avvia sulla porta 8080 di default
 - Configurare correttamente il CORS per l'integrazione con il frontend
-- Gestire correttamente le variabili d'ambiente in produzione
+- Gestire correttamente le proprietà di Hibernate in produzione
 
 ## 🐛 Debug e Logging
 
