@@ -1,0 +1,25 @@
+# File di testo
+*.txt
+
+# File di configurazione
+src/main/resources/config.properties
+
+# Directory di build
+target/
+bin/
+build/
+
+# File di IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# File di sistema
+.DS_Store
+Thumbs.db
+
+# File di log
+*.log 
