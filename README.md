@@ -1,6 +1,7 @@
 # 📚 Open Wiki Java Middleware
 
-Questo è il middleware Java per l'applicazione Open Wiki, un sistema che permette di cercare, salvare e gestire articoli da Wikipedia. Il middleware gestisce l'interazione con l'API di Wikipedia e il salvataggio degli articoli nel database.
+Questo è il middleware Java per l'applicazione Open Wiki,versione Hybernate, un sistema che permette di cercare, salvare e gestire articoli da Wikipedia. Il middleware gestisce l'interazione con l'API di Wikipedia e il salvataggio degli articoli nel database.
+IN AGGIORNAMENTO...
 
 ## 🌟 Caratteristiche Principali
 
