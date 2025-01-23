@@ -1,10 +1,11 @@
 # 📚 Open Wiki Java Middleware
 
-Questo è il middleware Java per l'applicazione Open Wiki,versione Hybernate, un sistema che permette di cercare, salvare e gestire articoli da Wikipedia. Il middleware gestisce l'interazione con l'API di Wikipedia e il salvataggio degli articoli nel database.
-IN AGGIORNAMENTO...
+Questo è il middleware Java per l'applicazione Open Wiki, che utilizza Hibernate come ORM per la persistenza dei dati. Il sistema permette di cercare, salvare e gestire articoli da Wikipedia. Il middleware gestisce l'interazione con l'API di Wikipedia e il salvataggio degli articoli nel database.
+
 
 ## 🌟 Caratteristiche Principali
 
+- 🗄️ Persistenza dati con Hibernate ORM
 - 🔍 Ricerca avanzata di articoli su Wikipedia
 - 📚 Gestione completa degli articoli salvati (CRUD)
 - 🌟 Articolo del giorno con aggiornamento automatico
@@ -36,7 +37,7 @@ Questo è solo il middleware dell'applicazione. Per il funzionamento completo so
 ### Backend
 - Java 17
 - Javalin (Framework web leggero)
-- Hibernate (ORM)
+- Hibernate 6.6 (ORM)
 - Jackson (Serializzazione JSON)
 - MySQL (Database)
 - SLF4J (Logging)
@@ -67,40 +68,20 @@ cd open-wiki-middleware
 ```sql
 CREATE DATABASE openwiki;
 USE openwiki;
-
-CREATE TABLE articles (
-    id VARCHAR(36) PRIMARY KEY,
-    user_id VARCHAR(36) NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    content TEXT,
-    image_url TEXT,
-    page_id VARCHAR(50),
-    wiki_url TEXT,
-    date_downloaded DATETIME,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_user_id (user_id)
-);
 ```
 
 ### 3. Configurazione Ambiente
-Crea il file `application.properties` nella cartella `src/main/resources`:
+Crea il file `persistence.xml` nella cartella `src/main/resources/META-INF`:
 ```properties
-# Hibernate
-hibernate.dialect=org.hibernate.dialect.MySQLDialect
-hibernate.connection.driver_class=com.mysql.cj.jdbc.Driver
-hibernate.connection.url=jdbc:mysql://localhost:3306/openwiki
-hibernate.connection.username=your_username
-hibernate.connection.password=your_password
-hibernate.show_sql=true
-hibernate.hbm2ddl.auto=update
-
-# Server
-server.port=8080
-cors.allowed.origins=http://localhost:5174
-
-# Wikipedia API
-wiki.api.url=https://it.wikipedia.org/w/api.php
+<persistence-unit name="openwikiPU">
+    <!-- Configurazione del database -->
+    <properties>
+        <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/openwiki"/>
+        <property name="jakarta.persistence.jdbc.user" value="root"/>
+        <property name="jakarta.persistence.jdbc.password" value="your_password"/>
+        <!-- Altre proprietà Hibernate -->
+    </properties>
+</persistence-unit>
 ```
 
 ### 4. Build e Avvio
@@ -161,20 +142,20 @@ src/
 │   │           ├── model/         # Modelli dati (Entità Hibernate)
 │   │           │   ├── Article.java
 │   │           │   └── WikiSearchResult.java
-│   │           ├── repository/    # Repository Hibernate
-│   │           │   └── ArticleRepository.java
-│   │           ├── config/       # Configurazioni
-│   │           │   └── HibernateConfig.java
-│   │           └── middleware/   # Middleware
+│   │           ├── dao/           # Data Access Objects
+│   │           ├── config/        # Configurazioni
+│   │           └── middleware/    # Middleware
 │   │               └── AuthMiddleware.java
 │   └── resources/
-│       └── application.properties
+│       └── META-INF/
+│           └── persistence.xml
 ```
 
 ## 📝 Note Importanti
 
 - Il middleware richiede Java 17 o superiore
-- Hibernate gestisce automaticamente la creazione delle tabelle del database
+- Hibernate gestisce automaticamente la creazione e l'aggiornamento delle tabelle
+- La configurazione del database è centralizzata nel file persistence.xml
 - È necessario avere MySQL installato e configurato
 - Assicurarsi che tutti i componenti dell'applicazione siano in esecuzione
 - Il servizio si avvia sulla porta 8080 di default
