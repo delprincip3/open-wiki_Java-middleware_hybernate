@@ -14,7 +14,7 @@ import com.openwiki.controller.AuthController;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-
+import com.openwiki.config.HibernateConfig;
 
 public class Main {
     public static void main(String[] args) {
@@ -82,6 +82,11 @@ public class Main {
         // app.before("/api/wikipedia/*", new AuthMiddleware());
 
         app.start(8080);
+
+        // Aggiungi il hook di chiusura dell'EntityManagerFactory
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            HibernateConfig.closeEntityManagerFactory();
+        }));
     }
 
     private static void testHandler(Context ctx) {
